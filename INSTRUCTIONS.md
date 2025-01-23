@@ -2,30 +2,26 @@
 
 Follow these steps to deploy your Flask application to GitHub:
 
-1. Create a new repository on GitHub:
+1. First, create a Personal Access Token (PAT) on GitHub:
    - Go to github.com and sign in
-   - Click the "+" icon in the top right corner
-   - Select "New repository"
-   - Name your repository (e.g., "flask-user-form")
-   - Leave it public or make it private as per your preference
-   - Don't initialize with README (we already have one)
-   - Click "Create repository"
+   - Click your profile picture → Settings
+   - Scroll down to "Developer settings" (bottom of left sidebar)
+   - Click "Personal access tokens" → "Tokens (classic)"
+   - Generate new token (classic)
+   - Give it a name (e.g., "Flask App Deployment")
+   - Select scopes: at minimum, check "repo"
+   - Click "Generate token"
+   - **IMPORTANT**: Copy your token immediately and save it somewhere safe. You won't be able to see it again!
 
-2. Initialize Git and push your code (run these commands in your terminal):
+2. Now, when pushing to GitHub, use your token as the password:
 ```bash
-# Initialize Git repository
-git init
+# First, configure Git to use HTTPS
+git config --global credential.helper store
 
-# Add all files
-git add .
+# Then set up your remote (replace with your details)
+git remote set-url origin https://YOUR_USERNAME@github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
 
-# Commit the files
-git commit -m "Initial commit"
-
-# Add your GitHub repository as remote
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-
-# Push to GitHub
+# When you push, use your token as the password
 git push -u origin main
 ```
 
