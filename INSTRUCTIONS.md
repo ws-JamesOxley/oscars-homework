@@ -18,8 +18,8 @@ Follow these steps to deploy your Flask application to GitHub:
 # First, configure Git to use HTTPS
 git config --global credential.helper store
 
-# Then set up your remote (replace with your details)
-git remote set-url origin https://YOUR_USERNAME@github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+# Then set up your remote (already configured for you)
+git remote set-url origin https://ws-JamesOxley@github.com/ws-JamesOxley/oscars-homework.git
 
 # When you push, use your token as the password
 git push -u origin main
