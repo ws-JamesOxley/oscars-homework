@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, Response
+from functools import wraps
 import logging
 import os
+import base64
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -8,10 +10,35 @@ logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
 app.secret_key = "your-secret-key-here"  # Required for flash messages
 
+# Basic Auth credentials
+AUTH_USERNAME = "stanway"
+AUTH_PASSWORD = "oscarhomework"
+
+def check_auth(username, password):
+    """Check if a username/password combination is valid."""
+    return username == AUTH_USERNAME and password == AUTH_PASSWORD
+
+def authenticate():
+    """Sends a 401 response that enables basic auth"""
+    return Response(
+        'Could not verify your access level for that URL.\n'
+        'You have to login with proper credentials', 401,
+        {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
+
 # Ensure the data directory exists
 os.makedirs('data', exist_ok=True)
 
 @app.route('/', methods=['GET', 'POST'])
+@requires_auth
 def index():
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
@@ -43,6 +70,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/history')
+@requires_auth
 def history():
     submissions = []
     try:
